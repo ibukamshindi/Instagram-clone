@@ -25,3 +25,10 @@ class ProfileTestClass(TestCase):
         profiles = Profile.objects.all()
         self.assertTrue(len(profiles)==0)
 
+class ImageTestClass(TestCase):
+  
+    def setUp(self):
+        self.image = Image(image ='imageurl', image_name='humour', image_caption='hehe')
+
+    def test_instance(self):
+        self.assertTrue(isinstance(self.image, Image))
