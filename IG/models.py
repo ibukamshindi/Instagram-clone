@@ -19,10 +19,13 @@ class Profile(models.Model):
           self.delete()
 
 class Image(models.Model):
-    image=models.ImageField(upload_to='photos/',null=True)
-    image_name=models.CharField(max_length =30,null=True)
-    image_caption=models.TextField()
-    profile=models.ForeignKey(Profile,null=True,on_delete=models.CASCADE)
+      image=models.ImageField(upload_to='photos/',null=True)
+      image_name=models.CharField(max_length =30,null=True)
+      image_caption=models.TextField()
+      profile=models.ForeignKey(Profile,null=True,on_delete=models.CASCADE)
+
+      def save_image(self):
+          self.save()
     
 
 class Comment(models.Model):
