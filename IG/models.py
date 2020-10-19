@@ -8,7 +8,6 @@ class Profile(models.Model):
       bio=models.TextField()
       user=models.ForeignKey(User,on_delete=models.CASCADE)
 
-
       def __str__(self):
          return self.user.username
 
@@ -26,6 +25,9 @@ class Image(models.Model):
 
       def save_image(self):
           self.save()
+
+      def delete_image(self):
+          self.delete()
     
 
 class Comment(models.Model):
