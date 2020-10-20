@@ -20,4 +20,5 @@ from django.conf.urls import url,include
 urlpatterns = [
     url(r'admin/', admin.site.urls),
     url(r'', include('IG.urls')),
+    url(r'^accounts/', include('django_registration.backends.one_step.urls')),
 ]
