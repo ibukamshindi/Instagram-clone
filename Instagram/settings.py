@@ -32,7 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'IG',
-    'bootstrap4',
+    'bootstrap3',
     'pyuploadcare.dj',
     'django.contrib.admin',
     'django.contrib.auth',
