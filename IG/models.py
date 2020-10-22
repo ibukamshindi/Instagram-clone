@@ -7,7 +7,7 @@ from friendship.models import Friend,Follow,Block
 class Profile(models.Model):
       profile_photo=models.ImageField(upload_to='profiles/',null=True)
       bio=models.TextField()
-      user=models.OneToOneField(User,on_delete=models.CASCADE)
+      owner=models.OneToOneField(User,on_delete=models.CASCADE,related_name="profile")
 
       def __str__(self):
          return self.user.username
