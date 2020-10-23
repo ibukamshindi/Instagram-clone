@@ -2,11 +2,10 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db import transaction
 from friendship.models import Friend,Follow,Block
-from pyuploadcare.dj.models import ImageField
 
 # Create your models here.
 class Profile(models.Model):
-      profile_photo=ImageField(blank=True)
+      profile_photo=models.ImageField(upload_to='profiles/',null=True)
       bio=models.TextField()
       owner=models.OneToOneField(User,on_delete=models.CASCADE,related_name="profile")
 
@@ -30,7 +29,7 @@ class Profile(models.Model):
           return profiles
 
 class Image(models.Model):
-      image=ImageField(manual_crop='1080x800',null=True)
+      image=models.ImageField(upload_to='photos',null=True)
       image_name=models.CharField(max_length =30,null=True)
       image_caption=models.TextField()
       profile=models.ForeignKey(Profile,null=True,on_delete=models.CASCADE)
@@ -42,8 +41,13 @@ class Image(models.Model):
           self.delete()
 
       @classmethod
-      def get_profile_images(cls, profile):
-          images = Image.objects.filter(profile__pk=profile)
+      def search_by_user(cls, search_term):
+          images = cls.objects.filter(image_caption__icontains=search_term)
+          return images
+
+      @classmethod
+      def get_image_by_id(cls, image_id):
+          images = cls.objects.get(id=image_id)
           return images
     
 
