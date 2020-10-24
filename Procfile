@@ -1,1 +1,1 @@
-web: gunicorn IG.wsgi --log-file -
+web: gunicorn instagram.wsgi --log-file -
