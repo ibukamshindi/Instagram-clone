@@ -33,7 +33,6 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'IG',
     'bootstrap3',
-    'pyuploadcare.dj',
     'friendship',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -137,4 +136,3 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
-django_heroku.settings(locals())
