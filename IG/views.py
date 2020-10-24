@@ -1,32 +1,78 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .models import Image,Profile,Comment,Follow,Likes
-from .forms import ProfileForm,ImageForm,CommentForm
-
+from .models import Image, Profile, Comment
+from .forms import NewStatusForm, NewCommentForm
 
 # Create your views here.
 @login_required(login_url='/accounts/login/')
-def home(request):
-    return render(request,'home.html')
-
-@login_required(login_url='/account/login')
+def timelines(request):
+    current_user = request.user
+    images = Image.objects.order_by('-date_uploaded')
+    profiles = Profile.objects.order_by('-last_update')
+    comments = Comment.objects.order_by('-time_comment')
+    return render(request, 'timelines.html', {'images':images, 'profiles':profiles, 'user_profile':user_profile, 'comments':comments})
+    
+@login_required(login_url='/accounts/login/')
 def profile(request):
-    return render(request,'profile.html')
+    current_user = request.user
+    profile = Profile.objects.get(user_id=current_user.id)
+    images = Image.objects.all().filter(profile_id=current_user.id)
+    return render(request, 'profile.html', {'images':images, 'profile':profile})
+
+@login_required(login_url='/accounts/login/')
+def new_status(request, username):
+    current_user = request.user
+    username = current_user.username
+    if request.method == 'POST':
+        form = NewStatusForm(request.POST, request.FILES)
+        if form.is_valid():
+            image = form.save()
+            image.user = request.user
+            image.save()
+        return redirect('allTimelines')
+    else:
+        form = NewStatusForm()
+    return render(request, 'new_status.html', {"form": form})
 
 @login_required(login_url='/accounts/login')
-def display_profile(request,id):
-    seekuser=User.objects.filter(id=id).first()
-    profile=seekuser.profile
-    profile_details=profile.get_by_id(id)
-    images=Image.get_profile_images(id)
+def user_profile(request, user_id):
+    profile = Profile.objects.get(id=user_id)
+    images = Image.objects.all().filter(user_id=user_id)
+    return render(request, 'profile.html', {'profile':profile, 'images':images})
 
-    usersss=User.objects.get(id=id)
-    follower=len(Follow.objects.followers(usersss))
-    following=len(Follow.objects.following(usersss))
-    people=User.objects.all()
-    pip_following=Follow.objects.following(request.user)
+@login_required(login_url='/accounts/login')
+def single_image(request, photo_id):
+    image = Image.objects.get(id = photo_id)
+    return render(request, 'single_image.html', {'image':image})
 
-    return render(request,'profile.html',locals())
+def find_profile(request):
+    if 'images' in request.GET and request.GET['images']:
+        search_term = request.GET.get('images')
+        searched_image = Image.search_by_user(search_term)
+        return render(request, 'user_profile.html', {'images':searched_image})
+    else:
+        message = 'You haven\'t searched for anything'
+        return render(request, 'single_image.html')
 
+@login_required (login_url='/accounts/register/')
+def single_image_like(request, photo_id):
+    image = Image.objects.get(id=photo_id)
+    image.likes = image.likes + 1
+    image.save()
+    return redirect('allTimelines')
 
+@login_required(login_url='/accounts/login/')
+def new_comment(request, username):
+    current_user = request.user
+    username = current_user.username
+    if request.method == 'POST':
+        form = NewCommentForm(request.POST, request.FILES)
+        if form.is_valid():
+            comment = form.save()
+            comment.user = request.user
+            comment.save()
+        return redirect('allTimelines')
+    else:
+        form = NewCommentForm()
+    return render(request, 'new_comment.html', {"form": form})

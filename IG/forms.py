@@ -1,17 +1,12 @@
 from django import forms
 from .models import Profile,Image,Comment
 
-class ProfileForm(forms.ModelForm):
-    class Meta:
-      model=Profile
-      exclude=['user']
-
-class ImageForm(forms.ModelForm):
+class NewStatusForm(forms.ModelForm):
     class Meta:
         model = Image
-        exclude =['likes','profile']
+        fields = ('image', 'image_caption')
 
-class CommentForm(forms.ModelForm):
+class NewCommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        exclude = ['image', 'user']
+        fields = ('comment',)

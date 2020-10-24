@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 class ProfileTestClass(TestCase):
     def setUp(self):
         user=User(username='pato')
-        self.profile=Profile(profile_photo='this is me',bio='execeptional',owner=user)
+        self.profile=Profile(profile_photo='this is me',bio='execeptional',user=user)
 
     def test_instance(self):
         self.assertTrue(isinstance(self.profile,Profile))
